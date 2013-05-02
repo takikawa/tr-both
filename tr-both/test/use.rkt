@@ -1,12 +1,16 @@
 #lang racket
 
-;(require "test.rkt")
+(require rackunit)
 
-;; error from untyped code
-;(foo "foo" "bar")
+(let ()
+  (local-require "test.rkt")
 
-(require (submod "test.rkt" #%tr-both))
+  ;; error from untyped code
+  (check-exn exn:fail? (λ () (foo "foo" "bar"))))
 
-;; contract error
-(foo "foo" "bar")
+(let ()
+  (local-require (submod "test.rkt" #%tr-both))
+
+  ;; contract error
+  (check-exn exn:fail:contract:blame? (λ () (foo "foo" "bar"))))
 
